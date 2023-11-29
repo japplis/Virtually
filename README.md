@@ -3,20 +3,14 @@
 ## Introduction
 ### Virtually is a library that contains classes to easily migrate code to be more virtual thread friendly. One of the goal is to do it with the less boilingplate code.
 
-For workable demo of the API go to src/test/com/japplis/virtually/demo
-
-At the moment, most of the methods requires `--enable-preview` JVM start-up parameter.
-Also note that this is early days for this library, so backward compatibility is not guaranteed.
-
-One of the problem is **pinning virtual threads** to carrier/platform thread.
+For workable full demo code of the API go to [Demo directory](src/test/java/com/japplis/virtually/demo)
 
 This library provides many tools to migrate to a more virtual thread friendly code:
 * Utility methods and annotations to replace the `synchronized` keyword 
 * Utility methods to convert list elements in parallel using virtual threads
-* Replacement methods that don't pin the virtual thread
 * Classes to execute multiple tasks in virtual threads
 
-For full demo code go to [Demo directory](src/test/java/com/japplis/virtually/demo)
+Also note that this is early days for this library, so backward compatibility is not guaranteed.
 
 ## Synchronized
 Synchronized code is pinning the virtual thead to the platform/carrier thread, so it should be avoided around I/O operation and replace with ReentrantLock for example.
@@ -27,7 +21,7 @@ import com.japplis.virtually.sync.BlockLock;
 BlockLock blockLock = new BlockLock();
 void main() {
     // BlockLock is an AutoCloseable ReentrantLock
-    try (var _ = blockLock.lockBlock()) { 
+    try (var sync = blockLock.lockBlock()) { 
         // Synchronized block with a ReentrantLock
     }
 }
@@ -44,7 +38,7 @@ void main() {
     runSynchronized(this, () -> { // 'this' can be replaced with any object (also a ReentrantLock)
         // Synchronized block with a ReentrantLock
     });
-    callSynchronized(this, () -> {
+    callSynchronized(this, () -> { // will rethrow the Exception of the Callable lambda
         // Synchronized block for Callable that may throw an exception
     });
 }
@@ -52,7 +46,8 @@ void main() {
 
 ## Collections
 ```java
-import static com.japplis.virtually.CollectionUtils.*;
+import static com.japplis.virtually.ListConverter.*;
+import static com.japplis.virtually.MapUtils.*;
 
 void main() throws Exception {
     // convert a list to another one using one virtual thread per element
@@ -65,16 +60,19 @@ void main() throws Exception {
 ```
 
 ## Task scopes
+At the moment (JDK 21), the task scopes require `--enable-preview` JVM start-up parameter.
 
 ```java
 import static com.japplis.virtually.scope.ListTaskScope;
 
 void main() throws Exception {
-    // A WaitingFunction is a Function that can throw an exception
-    WaitingFunction<Product, Double> productToPrice = (Product p) -> priceService.retreivePrice(p.id());
+    // A CallableFunction is a Function that can throw an exception
+    CallableFunction<Product, Double> productToPrice = (Product p) -> priceService.retreivePrice(p.id());
     try (ListTaskScope<Product, Double> scope = new ListTaskScope(productToPrice)) {
         // scope.setDefaultValue(0);
         // scope.setFailOnException(true);
+        // scope.setMaxConcurrentTasks(10_000);
+        // scope.setMaxConsecutiveFails(50);
         for (Product product : products) {
             scope.convert(product);
         }

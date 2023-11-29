@@ -4,7 +4,6 @@ plugins {
 
 version = "0.1"
 
-
 tasks.jar {
     manifest {
         attributes(mapOf("Implementation-Title" to project.name,

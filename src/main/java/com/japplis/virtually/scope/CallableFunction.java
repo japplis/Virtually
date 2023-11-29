@@ -24,7 +24,7 @@ import java.util.function.Function;
  *
  * @author Anthony Goubard - Japplis
  */
-public interface WaitingFunction<T, R> extends Function<T, R> {
+public interface CallableFunction<T, R> extends Function<T, R> {
 
     R call(T t) throws Exception;
 

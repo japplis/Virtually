@@ -18,75 +18,31 @@
 package com.japplis.virtually.scope;
 
 import java.util.*;
-import java.util.concurrent.StructuredTaskScope;
 import java.util.concurrent.ThreadFactory;
 
 /**
+ * A StructuredTaskScope specialized for lists mapping.
  *
  * @author Anthony Goubard - Japplis
  */
-public class ListTaskScope<E, R> extends StructuredTaskScope<R> {
+public class ListTaskScope<E, R> extends EnhancedTaskScope<R> {
 
     private final Map<E, Subtask<? extends R>> elemToSubtask = new LinkedHashMap<>();
-    private final WaitingFunction<E, R> mapper;
-    private R defaultValue;
-    private boolean failOnException;
-    private Throwable failedException;
+    private final CallableFunction<E, R> mapper;
 
-    public ListTaskScope(WaitingFunction<E, R> mapper) {
+    public ListTaskScope(CallableFunction<E, R> mapper) {
         this.mapper = mapper;
     }
 
-    public ListTaskScope(String name, ThreadFactory factory, WaitingFunction<E, R> mapper) {
+    public ListTaskScope(String name, ThreadFactory factory, CallableFunction<E, R> mapper) {
         super(name, factory);
         this.mapper = mapper;
-    }
-
-    public R getDefaultValue() {
-        return defaultValue;
-    }
-
-    /**
-     * Sets a default value if the call fails. Note that <code>null</code> is not allowed as default value.
-     * Also it's only used if <code>setFailOnException(true)</code> is not called.
-     *
-     * @param defaultValue
-     */
-    public void setDefaultValue(R defaultValue) {
-        if (defaultValue == null) throw new IllegalArgumentException("null is not allowed as default value.");
-        this.defaultValue = defaultValue;
-    }
-
-    public boolean isFailOnException() {
-        return failOnException;
-    }
-
-    public void setFailOnException(boolean failOnException) {
-        this.failOnException = failOnException;
-    }
-
-    /**
-     * When failOnException is set returns the first exception that failed this scope.
-     *
-     * @return the exception or <code>null</code> if getFailOnException is false or no exception occurred.
-     */
-    public Throwable getFailedException() {
-        return failedException;
     }
 
     public Subtask<? extends R> convert(E elem) {
         var subtask = fork(() -> mapper.call(elem));
         elemToSubtask.put(elem, subtask);
         return subtask;
-    }
-
-    @Override
-    protected void handleComplete(Subtask<? extends R> subtask) {
-        super.handleComplete(subtask);
-        if (failOnException && subtask.state() == Subtask.State.FAILED) {
-            if (failedException == null) failedException = subtask.exception();
-            shutdown();
-        }
     }
 
     public List<R> getResultsAsList() {
@@ -105,8 +61,8 @@ public class ListTaskScope<E, R> extends StructuredTaskScope<R> {
             var subtask = elemSubstack.getValue();
             if (subtask.state() == Subtask.State.SUCCESS) {
                 results.put(elemSubstack.getKey(), subtask.get());
-            } else if (!failOnException && defaultValue != null) {
-                results.put(elemSubstack.getKey(), defaultValue);
+            } else if (getException() != null && getDefaultValue() != null) {
+                results.put(elemSubstack.getKey(), getDefaultValue());
             }
         }
         return results;

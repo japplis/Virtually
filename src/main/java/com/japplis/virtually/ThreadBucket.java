@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * A group of related virtual threads.
  *
  * @author Anthony Goubard - Japplis
  */
@@ -43,6 +44,14 @@ public class ThreadBucket {
 
     public List<Thread> getThreads() {
         return threads;
+    }
+
+    public void interrupt() {
+        for (Thread thread : threads) {
+            if (thread.isAlive()) {
+                thread.interrupt();
+            }
+        }
     }
 
     public void waitForAll() {
