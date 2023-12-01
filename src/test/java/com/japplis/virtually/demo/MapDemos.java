@@ -28,7 +28,7 @@ public class MapDemos {
             Product product = products.get(number);
             Thread priceThread = Thread.startVirtualThread(() -> {
                 try {
-                    Maps.computeIfAbsent(prices, product, p -> priceService.retreivePrice(p.id()));
+                    Maps.computeIfAbsent(prices, product, priceService::retreivePrice);
                 } catch (Exception ex) {
                     System.err.println("Failed for product " + number + "; " + ex.getMessage());
                 }

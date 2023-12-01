@@ -1,16 +1,25 @@
 # Virtually - Make your code Java virtual threads friendly
 
 ## Introduction
-### Virtually is a library that contains classes to easily migrate code to be more virtual thread friendly. One of the goal is to do it with the less boilingplate code.
+### Virtually is a library that contains classes to ease the migration of code to be more virtual threads friendly. One of the goal is to do it with the less boilingplate code.
 
-For workable full demo code of the API go to [Demo directory](src/test/java/com/japplis/virtually/demo)
+For workable full demo code of the API, go to [Demo directory](src/test/java/com/japplis/virtually/demo)
 
-This library provides many tools to migrate to a more virtual thread friendly code:
+This library provides many tools to migrate to a more virtual threads friendly code:
 * Utility methods and annotations to replace the `synchronized` keyword 
 * Utility methods to convert list elements in parallel using virtual threads
 * Classes to execute multiple tasks in virtual threads
 
 Also note that this is early days for this library, so backward compatibility is not guaranteed.
+
+## Why virtual threads
+
+| For Managers  | For Developers |
+| ------------- | -------------- |
+| Less memory needed (save costs) | Easy to debug |
+| Accept more requests per server | Readable stack trace |
+| More memory for caching (faster response  time) | Easier to develop with |
+| Apply a bit of all of the above | Good pretext to migrate to Java 21 |
 
 ## Synchronized
 Synchronized code is pinning the virtual thead to the platform/carrier thread, so it should be avoided around I/O operation and replace with ReentrantLock for example.
@@ -51,11 +60,11 @@ import static com.japplis.virtually.MapUtils.*;
 
 void main() throws Exception {
     // convert a list to another one using one virtual thread per element
-    List<Double> prices = convertAll(products, p -> priceService.retreivePrice(p.id()));
+    List<Double> prices = convertAll(products, priceService::retreivePrice);
     // Get per product the price
-    Map<Product, Double> productPrice = convertToMap(products, p -> priceService.retreivePrice(p.id()));
+    Map<Product, Double> productPrice = convertToMap(products, priceService::retreivePrice);
     // Get price for other products if not already in the map
-    computeIfAbsent(productPrice, newProduct, p -> priceService.retreivePrice(p.id()));
+    computeIfAbsent(productPrice, newProduct, priceService::retreivePrice);
 }
 ```
 
@@ -84,9 +93,9 @@ void main() throws Exception {
 
 ## Annotations
 ```java
-import com.japplis.virtually.sync.Synchronized;
+import com.japplis.virtually.sync.*;
 
-@Synchronized // similar to synchronized keywork but with ReentrantLock, requires AspectJ library
+@Synchronized // similar to synchronized keyword but with ReentrantLock, requires AspectJ library
 void doSomethingSynchronized() {
     // do stuff
 }

@@ -38,6 +38,10 @@ public class PriceService {
         return INSTANCE;
     }
 
+    public double retreivePrice(Product product) {
+        return retreivePrice(product.id());
+    }
+
     public double retreivePrice(int productId) {
         try {
             Thread.sleep(500);
