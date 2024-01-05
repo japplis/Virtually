@@ -30,6 +30,10 @@ import com.japplis.virtually.scope.CallableFunction;
  */
 public class ListConverter {
 
+    // Only static methods
+    private ListConverter() {
+    }
+
     /**
      * Converts a list to another list using the mapper using virtual thread to execute the mapper.
      * The mapper needs to a function that performs I/O or waits to make sense of using virtual thread.

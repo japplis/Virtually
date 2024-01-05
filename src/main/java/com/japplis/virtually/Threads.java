@@ -20,10 +20,15 @@ package com.japplis.virtually;
 import java.util.Collection;
 
 /**
- *
+ * Utility methods for collection of threads.
+ * 
  * @author Anthony Goubard - Japplis
  */
 public class Threads {
+
+    // Only static methods
+    private Threads() {
+    }
 
     /**
      * Waits for all the threads (virtual or not) in the collection.

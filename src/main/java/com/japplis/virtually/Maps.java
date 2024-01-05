@@ -24,13 +24,18 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.japplis.virtually.scope.CallableFunction;
 
 /**
- *
+ * Virtual thread friendly utility methods related to Map.
+ * 
  * @author Anthony Goubard - Japplis
  */
 public class Maps {
 
     private final static Map<Map, Map<Object, ReentrantLock>> MAP_KEY_LOCKS = new HashMap<>();
     private final static ReentrantLock MAP_LOCK = new ReentrantLock();
+
+    // Only static methods
+    private Maps() {
+    }
 
     /**
      * Replacement for ConcurrentHashMap#computeIfAbsent as it's using synchronized block.

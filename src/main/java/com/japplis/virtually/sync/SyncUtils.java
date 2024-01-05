@@ -35,6 +35,10 @@ public class SyncUtils {
     private final static Map<Object, ReentrantLock> OBJECT_LOCKS = new HashMap<>();
     private final static ReentrantLock OBJECT_LOCK = new ReentrantLock();
 
+    // Only static methods
+    private SyncUtils() {
+    }
+
     /**
      * Run the function in a synchronized way using a ReentrantLock instead of a synchronized block to avoid pinning a virtual thread.
      * Note that the function is synchronized on the caller.

@@ -89,7 +89,7 @@ public class EnhancedTaskScope<T> extends StructuredTaskScope<T> {
      * Sets a default value if the call fails. Note that <code>null</code> is not allowed as default value.
      * Also it's only used if <code>setFailOnException(true)</code> is not called.
      *
-     * @param defaultValue
+     * @param defaultValue the default value for fails tasks, cannot be <code>null</code>.
      */
     public void setDefaultValue(T defaultValue) {
         if (defaultValue == null) throw new IllegalArgumentException("null is not allowed as default value.");
