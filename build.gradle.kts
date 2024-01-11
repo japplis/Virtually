@@ -48,6 +48,7 @@ plugins.withId("maven-publish") {
               from(components["java"])
               pom {
                 artifactId = "virtually"
+                name.set("Virtually")
                 description.set("Virtual threads friendly tools")
                 url.set("https://www.github.com/japplis/Virtually")
 

@@ -106,3 +106,8 @@ void doSomethingElseSynchronized() {
 }
 
 ```
+
+## Sponsors
+![Ant Commander Pro Logo](https://www.antcommander.com/images/AntCommanderProSponsor256.png)
+
+This open-source project is sponsored by <a href="https://www.antcommander.com/">Ant Commander Pro File Manager</a>. A professional file manager for Windows, MacOS and Linux for developers and more.
