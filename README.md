@@ -21,6 +21,16 @@ Also note that this is early days for this library, so backward compatibility is
 | More memory for caching (faster response  time) | Easier to develop with |
 | Apply a bit of all of the above | Good pretext to migrate to Java 21 |
 
+## Maven
+```xml
+<dependency>
+  <groupId>com.japplis</groupId>
+  <artifactId>virtually</artifactId>
+  <version>0.1</version>
+</dependency>
+```
+[Gradle & more](https://mvnrepository.com/artifact/com.japplis/virtually/0.1)
+
 ## Synchronized
 Synchronized code is pinning the virtual thead to the platform/carrier thread, so it should be avoided around I/O operation and replace with ReentrantLock for example.
 
