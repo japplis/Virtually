@@ -117,7 +117,24 @@ void doSomethingElseSynchronized() {
 
 ```
 
+## Libraries
+
+Here is a list of frameworks and libraries that are virtual-threads friendly
+
+| Name              | Version | Remark |
+| ----------------- | ------- | ------ |
+| Spring Boot       |   3.2.0 | spring.threads.virtual.enabled=true |
+| Quarkus           |   3.4.0 | [@RunOnVirtualThread](https://quarkus.io/guides/virtual-threads) |
+| Micronaut         |   4.0.0 | @Executes(BLOCKING) |
+| Tomcat            |      11 | <Connector ... useVirtualThreads="true" /> |
+| Jettty            |      12 | [Details](https://webtide.com/jetty-12-virtual-threads-support/) |
+| Helidon           |   4.0.0 | [Helidon Níma](https://helidon.io/nima) |
+| pgjdbc (Postgres) |  42.6.0 |  |
+| Oracle driver     |     21c |  |
+| MariaDB connector |   3.3.0 |  |
+
+
 ## Sponsors
 <a href="https://www.antcommander.com/">![Ant Commander Pro Logo](https://www.antcommander.com/images/AntCommanderProSponsor100.png)</a>
 
-This open-source project is sponsored by <a href="https://www.antcommander.com/">Ant Commander Pro File Manager</a>. A professional file manager for Windows, MacOS and Linux for developers and more.
+This open-source project is sponsored by [Ant Commander Pro File Manager](https://www.antcommander.com/). A professional file manager for Windows, MacOS and Linux for developers and more.
