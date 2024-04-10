@@ -138,3 +138,5 @@ Here is a list of frameworks and libraries that are virtual-threads friendly
 <a href="https://www.antcommander.com/">![Ant Commander Pro Logo](https://www.antcommander.com/images/AntCommanderProSponsor100.png)</a>
 
 This open-source project is sponsored by [Ant Commander Pro File Manager](https://www.antcommander.com/). A professional file manager for Windows, MacOS and Linux for developers and more.
+
+You can also [hire me](mailto:anthony.goubard@japplis.com) to help you migrate to virtual threads.
