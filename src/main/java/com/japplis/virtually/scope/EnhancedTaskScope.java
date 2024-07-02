@@ -33,7 +33,6 @@ public class EnhancedTaskScope<T> extends StructuredTaskScope<T> {
     private int maxConsecutiveFails = -1;
     private AtomicInteger consecutiveFails = new AtomicInteger();
     private Throwable failedException;
-    private T defaultValue;
     private Semaphore maxConcurrency;
 
     public EnhancedTaskScope() {
@@ -41,10 +40,6 @@ public class EnhancedTaskScope<T> extends StructuredTaskScope<T> {
 
     public EnhancedTaskScope(String name, ThreadFactory factory) {
         super(name, factory);
-    }
-
-    public T getDefaultValue() {
-        return defaultValue;
     }
 
     public int getMaxConsecutiveFails() {
@@ -82,18 +77,6 @@ public class EnhancedTaskScope<T> extends StructuredTaskScope<T> {
     public void setMaxConcurrentTasks(int maxConcurrentTasks) {
         if (maxConcurrentTasks <= 0) throw new IllegalArgumentException("The number of maximum concurrent tasks should be greater than 0");
         maxConcurrency = new Semaphore(maxConcurrentTasks);
-    }
-
-
-    /**
-     * Sets a default value if the call fails. Note that <code>null</code> is not allowed as default value.
-     * Also it's only used if <code>setFailOnException(true)</code> is not called.
-     *
-     * @param defaultValue the default value for fails tasks, cannot be <code>null</code>.
-     */
-    public void setDefaultValue(T defaultValue) {
-        if (defaultValue == null) throw new IllegalArgumentException("null is not allowed as default value.");
-        this.defaultValue = defaultValue;
     }
 
     @Override

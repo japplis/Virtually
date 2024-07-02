@@ -39,6 +39,13 @@ public class ListTaskScope<E, R> extends EnhancedTaskScope<R> {
         this.mapper = mapper;
     }
 
+    public Map<E, R> convert(Iterable<E> elements) {
+        for (E elem : elements) {
+            convert(elem);
+        }
+        return getResultsAsMap();
+    }
+
     public Subtask<? extends R> convert(E elem) {
         var subtask = fork(() -> mapper.call(elem));
         elemToSubtask.put(elem, subtask);
