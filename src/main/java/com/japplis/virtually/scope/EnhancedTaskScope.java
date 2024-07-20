@@ -82,11 +82,25 @@ public class EnhancedTaskScope<T> extends StructuredTaskScope<T> {
     @Override
     public <U extends T> StructuredTaskScope.Subtask<U> fork(Callable<? extends U> task) {
         if (maxConcurrency != null) {
-            maxConcurrency.tryAcquire();
+            boolean acquired = false;
+            while (!acquired) {
+                try {
+                    maxConcurrency.acquire();
+                    acquired = true;
+                } catch (InterruptedException ex) {
+                }
+            }
         }
         return super.fork(task);
     }
 
+    /**
+     * Submit a task that should fail the scope if the task fails
+     *
+     * @param <U> the return type of the task
+     * @param task the task to execute in this scope
+     * @return the submitted task of the scope
+     */
     public <U extends T> Subtask<U> forkCritical(Callable<? extends U> task) {
         Subtask<U> subtask = fork(task);
         criticalTasks.add(subtask);
@@ -107,6 +121,14 @@ public class EnhancedTaskScope<T> extends StructuredTaskScope<T> {
         }
     }
 
+    /**
+     * Submit a task that should never fail the scope as if the task fails, a default value is used
+     *
+     * @param <U> the return type of the task
+     * @param task the task to execute in this scope
+     * @param defaultValue the default value to return if the task fails
+     * @return
+     */
     public <U extends T> Subtask<U> forkWithDefault(Callable<? extends U> task, U defaultValue) {
         Callable<? extends U> newTask = () -> {
             try {
