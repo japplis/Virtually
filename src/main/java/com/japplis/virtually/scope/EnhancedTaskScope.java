@@ -83,7 +83,7 @@ public class EnhancedTaskScope<T> extends StructuredTaskScope<T> {
     public <U extends T> StructuredTaskScope.Subtask<U> fork(Callable<? extends U> task) {
         if (maxConcurrency != null) {
             boolean acquired = false;
-            while (!acquired) {
+            while (!acquired && !isShutdown()) {
                 try {
                     maxConcurrency.acquire();
                     acquired = true;
